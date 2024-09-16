@@ -1,26 +1,58 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div id="app">
+    <h1>Vue Todo List</h1>
+    <form @submit.prevent="addTodo">
+      <input v-model="newTodo" placeholder="Add a todo" />
+      <button type="submit">Add</button>
+    </form>
+    <ul>
+      <TodoItem
+        v-for="(todo, index) in todos"
+        :key="index"
+        :todo="todo"
+        @toggle="toggleTodo"
+        @delete-todo="deleteTodo"
+      />
+    </ul>
+  </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import TodoItem from './components/TodoItem.vue';
 
 export default {
-  name: 'App',
   components: {
-    HelloWorld
-  }
-}
+    TodoItem,
+  },
+  data() {
+    return {
+      newTodo: '',
+      todos: [],
+    };
+  },
+  methods: {
+    addTodo() {
+      if (this.newTodo.trim()) {
+        this.todos.push({
+          text: this.newTodo,
+          completed: false,
+        });
+        this.newTodo = '';
+      }
+    },
+    toggleTodo(todo) {
+      todo.completed = !todo.completed;
+    },
+    deleteTodo(todo) {
+      this.todos = this.todos.filter((t) => t !== todo);
+    },
+  },
+};
 </script>
 
 <style>
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+  margin-top: 50px;
 }
 </style>
